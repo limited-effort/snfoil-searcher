@@ -145,6 +145,39 @@ class PeopleSearcher
 end
 ```
 
+### PORO
+
+Although our examples so far have used Active Record, you can use SnFoil Searchers with any dataset you need to filter.
+
+```ruby
+class FruitSearcher
+  include SnFoil::Searcher
+
+  # always filter out unavailable
+  setup do |scope, _params|
+    scope.select { |x| x[:available] }
+  end
+
+  filter(unless: ->(params) { params[:type].nil? || params[:type].empty? }) do |scope, params|
+    scope.select { |x| x[:type] == params[:type] }
+  end
+
+  filter(unless: ->(params) { params[:color].nil? || params[:color].empty? }) do |scope, params|
+    scope.select { |x| x[:color] == params[:color] }
+  end
+end
+
+fruits = [
+  { name: 'Apple', color: 'red', type: 'pome', available: true },
+  { name: 'Rowan', color: 'red', type: 'pome', available: false },
+  { name: 'Pear', color: 'green', type: 'pome', available: true },
+  { name: 'Grape', color: 'red', type: 'berry', available: true  }
+]
+
+FruitSearcher.new(fruits).search( type:'pome')
+  #=> [{ name: 'Apple', color: 'red', type: 'pome', available: true }, { name: 'Pear', color: 'green', type: 'pome', available: true }]
+```
+
 
 ## Development
 
