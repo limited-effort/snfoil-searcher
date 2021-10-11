@@ -38,6 +38,14 @@ RSpec.describe SnFoil::Searcher do
     it 'sets the internal model class' do
       expect(instance.model.to_s).to match(/Person/)
     end
+
+    context 'when assinging model twice' do
+      it 'raises an error' do
+        expect do
+          searcher.model :Person
+        end.to raise_error SnFoil::Searcher::Error
+      end
+    end
   end
 
   describe 'self#setup' do
@@ -48,20 +56,22 @@ RSpec.describe SnFoil::Searcher do
         params[:canary].sing(:filter)
         scope
       end
-
-      searcher.setup do |scope, params|
-        params[:canary].sing(:setup_block)
-        scope
-      end
-    end
-
-    it 'gets called before filters' do
-      query
-      expect(canary.song[0][:data]).to eq(:setup_block)
-      expect(canary.song[1][:data]).to eq(:filter)
     end
 
     context 'with a block' do
+      before do
+        searcher.setup do |scope, params|
+          params[:canary].sing(:setup_block)
+          scope
+        end
+      end
+
+      it 'gets called before filters' do
+        query
+        expect(canary.song[0][:data]).to eq(:setup_block)
+        expect(canary.song[1][:data]).to eq(:filter)
+      end
+
       it 'calls the block' do
         query
         expect(canary.song[0][:data]).to eq(:setup_block)
@@ -77,9 +87,35 @@ RSpec.describe SnFoil::Searcher do
         searcher.setup :setup_method
       end
 
+      it 'gets called before filters' do
+        query
+        expect(canary.song[0][:data]).to eq(:setup_method)
+        expect(canary.song[1][:data]).to eq(:filter)
+      end
+
       it 'calls the method' do
         query
         expect(canary.song[0][:data]).to eq(:setup_method)
+      end
+    end
+
+    context 'when assigning setup twice' do
+      before do
+        searcher.setup do |scope, params|
+          params[:canary].sing(:setup_block)
+          scope
+        end
+
+        searcher.define_method(:setup_method) do |scope, params|
+          params[:canary].sing(:setup_method)
+          scope
+        end
+      end
+
+      it 'raises an error' do
+        expect do
+          searcher.setup :setup_method
+        end.to raise_error SnFoil::Searcher::Error
       end
     end
   end

@@ -25,21 +25,27 @@ module SnFoil
   module Searcher
     class Error < RuntimeError; end
 
+    class ArgumentError < ArgumentError; end
+
     extend ActiveSupport::Concern
 
     class_methods do
       attr_reader :i_model, :i_setup, :i_filters, :i_search_step, :i_booleans
 
       def model(klass = nil)
+        raise SnFoil::Searcher::Error, "model already defined for #{self.class.name}" if @i_model
+
         @i_model = klass
       end
 
       def setup(setup_method = nil, &setup_block)
+        raise SnFoil::Searcher::Error, "setup already defined for #{self.class.name}" if @i_setup
+
         @i_setup = setup_method || setup_block
       end
 
       def filter(method = nil, **options, &block)
-        raise ArgumentError, 'filter requires either a method name or a block' if method.nil? && block.nil?
+        raise SnFoil::Searcher::ArgumentError, 'filter requires either a method name or a block' if method.nil? && block.nil?
 
         (@i_filters ||= []) << {
           method: method,
@@ -62,6 +68,8 @@ module SnFoil
     attr_reader :scope
 
     def initialize(scope: nil)
+      raise SnFoil::Searcher::Error, "No default scope or model configured for #{self.class.name}" if !scope && !model
+
       @scope = scope || model.all
     end
 
@@ -131,14 +139,11 @@ module SnFoil
     end
 
     def value_to_boolean(value)
-      string_val = value.to_s
-      if value == true || %w[true 1].include?(string_val)
-        true
-      elsif value == false || %w[false 0].include?(string_val)
-        false
-      else
-        value
-      end
+      value = false if value == '' || value.nil?
+
+      falses = [false, 0, '0', :'0', 'f', :f, 'F', :F, 'false', :false, 'FALSE', :FALSE, 'off', :off, 'OFF', :OFF].to_set.freeze # rubocop:disable Lint/BooleanSymbol
+
+      !falses.include?(value)
     end
   end
 end

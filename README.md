@@ -1,121 +1,149 @@
-# Snfoil::Policy
+# Snfoil::Searcher
 
-![build](https://github.com/limited-effort/snfoil-policy/actions/workflows/main.yml/badge.svg) <a href="https://codeclimate.com/github/limited-effort/snfoil-policy/maintainability"><img src="https://api.codeclimate.com/v1/badges/81c3abdb068a2305d4ce/maintainability" /></a>
+![build](https://github.com/limited-effort/snfoil-searcher/actions/workflows/main.yml/badge.svg) [![Maintainability](https://api.codeclimate.com/v1/badges/a05646d2c1e6e986de89/maintainability)](https://codeclimate.com/github/limited-effort/snfoil-searcher/maintainability)
 
-SnFoil Policies are an easy and intuitive way to built [Pundit](https://github.com/varvet/pundit) style authorization files with a little extra base functionality added in.
-
-
-While it isn't required you use [Pundit](https://github.com/varvet/pundit) with it, we highly recommend it.
+SnFoil Searchers allow you to break complex searching functionality into small easily testable sections.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'snfoil-policy'
+gem 'snfoil-searcher'
 ```
 
 ## Usage
 
-### Policies
+### Quickstart
 
-SnFoil Policies are meant to be used just like Pundit policies except you can build the actions using a helper and some of the setup work has been done for you.
+Here is a quick example of how you would use the a SnFoil Searcher with active record.
 
-The entity being authorizated (usually a User) is accessible via the `entity` instance variable.
-And the record the entity is trying to work with is accessible as the `record` instance variable.
+```ruby 
+# lib/searchers/people_searcher
+class PeopleSearcher
+  include SnFoil::Searcher
 
-Use `permission` to start setting up some checks.
+  model Person
 
-```ruby
-require 'snfoil/policy'
-
-class PostPolicy
-  include SnFoil::Policy
-
-  permission :create? do
-    entity.archived_at.nil? && record.user_id == entity.id
-  end
-
-  permission :update? do
-    entity.archived_at.nil? && record.user_id == entity.id
-  end
-
-  permission :destroy? do
-    entity.archived_at.nil? &&
-      (record.user_id == entity.id || entity.is_admin?)
+  filter do |scope, params|
+    scope.where('first_name ilike ?', params[:query])
   end
 end
 ```
 
-Those methods are now defined on the class and can be called.
+and call it like so
 
 ```ruby
-policy = PostPolicy.new(current_user, new_post)
-
-policy.create? # => true
+PeopleSearcher.new.search(query: 'alf')
 ```
 
-You can also pass method names instead of blocks to the helper to dry things up.
+### Getting a Searcher Configured
+
+#### Include
+This one is pretty simple - to add the functionality to your searcher class, you need to include it.  
+
+Like so:
 
 ```ruby
-require 'snfoil/policy'
+class PeopleSearcher
+  include SnFoil::Searcher
 
-class PostPolicy
-  include SnFoil::Policy
+  ...
+end
+```
 
-  permission :create?, with: :active_and_owner?
+#### Scoping
+You can provide an inital scope to the searcher by passing it to `new`.  If you don't pass in an initial scope, the searcher will try to use the model.
 
-  permission :update?, with: :active_and_owner?
+```ruby
+PeopleSearcher.new(People.where(team_id: 2))
+```
 
-  permission :destroy? do
-    entity.archived_at.nil? &&
-      (record.user_id == entity.id || entity.is_admin?)
+#### Model
+
+Model is a optional paramater you can set on the searcher class.  If model is defined - and there is no default scope provided when initilizing the searcher - it will default to using `model.all`
+
+```ruby 
+class PeopleSearcher
+  include SnFoil::Searcher
+
+  model Person
+end
+```
+
+#### Filter
+
+A filter is a step in the search process that takes the current scope and parameters and returns an altered scope.  We recommend keeping each filter as simple as possible - it should only have one responibility.  This way you can easily see every step the searcher takes to get to its outcome as well as clearly defining behaviors that should be tested.
+
+You can create as many filters as you would like, but it is important to remember that a filter should **always** return a scope.
+
+```ruby 
+class PeopleSearch
+  ...
+
+  # query by first_name
+  filter do |scope, params|
+    scope.where('first_name ilike ?', params[:query])
   end
 
-  def active_and_owner?
-    entity.archived_at.nil? && record.user_id == entity.id
+  # filter to age demographic
+  filter do |scope, _params|
+    scope.where('age >= 18').where('age <= 34')
   end
 end
 ```
 
-This can also be used to directly alias already defined permissions.
+##### Conditional Filters
 
-```ruby
-permission :create? do
-  entity.archived_at.nil? && record.user_id == entity.id
-end
+You probably don't want a filter to always run.  You can set `if` and `unless` procs to check whether or not the filter should run.
 
-permission :update?, with: :create?
-```
+```ruby 
+class PeopleSearcher
+  ...
 
-For more complex authorization mechanisms where more than one type of entity can operate against a record you can supply the type of the entity to check against.
-
-```ruby
-permission :create?, User do
-  entity.archived_at.nil? && record.user_id == entity.id
-end
-
-permission :create?, UltimateAccessToken do
-  entity.expires_at > Time.current
+  # query by first_name
+  filter(if: ->(params) { params[:query].present? }) do |scope, params|
+    scope.where('first_name ilike ?', params[:query])
+  end
 end
 ```
 
-And if for some reason you want to have type specific policies and a default, you can do that too.  Just remember to define them in the order of most specific at the top, to most generic at the bottom.  SnFoil Policies will stop at the first matching policy.
+#### Setup
+Setup is just a filter that runs first - before any other filters.  It does not allow for conditionals.  We recommend using this block to setup any requirements, tenant scoping, or stuff that really just need to happen first. 
 
-```ruby
-permission :create?, UltimateAccessToken do
-  entity.expires_at > Time.current
+```ruby 
+class PeopleSearcher
+  ...
+
+  setup do |scope, params|
+    scope.where(client_id: 1)
+  end
+
+  filter do |scope, params|
+    ...
+  end
 end
-
-permission :create? do
-  entity.archived_at.nil? && record.user_id == entity.id
-end
-
 ```
 
-### Scope
+#### Casting Booleans
 
-There is nothing special about SnFoil Policy Scopes.  They are just defined to make life a little easier. Go ahead an check out how to use Scopes in [Pundit](https://github.com/varvet/pundit#scopes), we highly recommend them.
+To help with cating boolean params - especially those coming from http params - we've added explicit boolean casting for params.  There are parsed and cast in place before any filter.  Just pass in an array of the params you would like to have cast.
+
+```ruby
+
+PeopleSearcher.new.search(red: 'true', blue: 'true', green: nil)
+
+class PeopleSearcher
+  booleans :red, :green
+
+  ...
+
+  filter do |scope, params|
+    # params => { red: true, blue: 'true', green: false }
+    ...
+  end
+end
+```
 
 
 ## Development
@@ -126,7 +154,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/limited-effort/snfoil-policy. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/limited-effort/snfoil-policy/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/limited-effort/snfoil-searcher. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/limited-effort/snfoil-searcher/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -134,4 +162,4 @@ The gem is available as open source under the terms of the [Apache 2 License](ht
 
 ## Code of Conduct
 
-Everyone interacting in the Snfoil::Policy project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/limited-effort/snfoil-policy/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Snfoil::Policy project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/limited-effort/snfoil-searcher/blob/main/CODE_OF_CONDUCT.md).
