@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Matthew Howes']
   spec.email         = ['howeszy@gmail.com']
 
-  spec.summary       = 'Pundit Style Permissions Builder'
-  spec.description   = 'A set of helper functions to build permission files inspired by Pundit.'
+  spec.summary       = 'A Simple Searcher Framework'
+  spec.description   = 'SnFoil Searchers allow you to break complex searching functionality into small easily testable sections.'
   spec.homepage      = 'https://github.com/limited-effort/snfoil-searcher'
   spec.license       = 'Apache-2.0'
   spec.required_ruby_version = '>= 2.5.0'
