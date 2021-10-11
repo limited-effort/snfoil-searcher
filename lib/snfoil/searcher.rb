@@ -121,8 +121,8 @@ module SnFoil
     end
 
     def filter_valid?(i_filter, params)
-      return false if !i_filter[:if].nil? && i_filter[:if].call(params) == false
-      return false if !i_filter[:unless].nil? && i_filter[:unless].call(params) == true
+      return false if !i_filter[:if].nil? && !i_filter[:if].call(params)
+      return false if !i_filter[:unless].nil? && i_filter[:unless].call(params)
 
       true
     end
