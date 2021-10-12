@@ -1,6 +1,6 @@
 # Snfoil::Searcher
 
-![build](https://github.com/limited-effort/snfoil-searcher/actions/workflows/main.yml/badge.svg) [![Maintainability](https://api.codeclimate.com/v1/badges/a05646d2c1e6e986de89/maintainability)](https://codeclimate.com/github/limited-effort/snfoil-searcher/maintainability)
+![build](https://github.com/limited-effort/snfoil-searcher/actions/workflows/main.yml/badge.svg) [![maintainability](https://api.codeclimate.com/v1/badges/a05646d2c1e6e986de89/maintainability)](https://codeclimate.com/github/limited-effort/snfoil-searcher/maintainability)
 
 SnFoil Searchers allow you to break complex searching functionality into small easily testable sections.
 
