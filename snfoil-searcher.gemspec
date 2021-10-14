@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['howeszy@gmail.com']
 
   spec.summary       = 'A Simple Searcher Framework'
-  spec.description   = 'SnFoil Searchers allow you to break complex searching functionality into small easily testable sections.'
+  spec.description   = 'Complex searching functionality as small easily testable sections.'
   spec.homepage      = 'https://github.com/limited-effort/snfoil-searcher'
   spec.license       = 'Apache-2.0'
   spec.required_ruby_version = '>= 2.5.0'
