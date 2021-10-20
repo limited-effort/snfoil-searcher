@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Boolean do
+RSpec.describe SnFoil::Searcher::Boolean do
   subject(:boolean) { described_class.new }
 
   describe 'casts' do

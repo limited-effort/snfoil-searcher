@@ -23,28 +23,34 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# A class that behaves like a boolean type, including rules for coercion of user input.
-#
-# === Coercion
-# - "false", "f" , "0", +0+ or any other value in +FALSE_VALUES+ will be coerced to +false+
-# - Empty strings are coerced to +nil+
-# - All other values will be coerced to +true+
-class Boolean
-  # rubocop:disable Lint/BooleanSymbol
-  FALSE_VALUES = [
-    false, 0,
-    '0', :'0',
-    'f', :f,
-    'F', :F,
-    'false', :false,
-    'FALSE', :FALSE,
-    'off', :off,
-    'OFF', :OFF,
-    '', nil
-  ].to_set.freeze
-  # rubocop:enable Lint/BooleanSymbol
+require 'set'
 
-  def cast(value)
-    !FALSE_VALUES.include?(value)
+module SnFoil 
+  module Searcher
+    # A class that behaves like a boolean type, including rules for coercion of user input.
+    #
+    # === Coercion
+    # - "false", "f" , "0", +0+ or any other value in +FALSE_VALUES+ will be coerced to +false+
+    # - Empty strings are coerced to +nil+
+    # - All other values will be coerced to +true+
+    class Boolean
+      # rubocop:disable Lint/BooleanSymbol
+      FALSE_VALUES = [
+        false, 0,
+        '0', :'0',
+        'f', :f,
+        'F', :F,
+        'false', :false,
+        'FALSE', :FALSE,
+        'off', :off,
+        'OFF', :OFF,
+        '', nil
+      ].to_set.freeze
+      # rubocop:enable Lint/BooleanSymbol
+
+      def cast(value)
+        !FALSE_VALUES.include?(value)
+      end
+    end
   end
 end

@@ -15,6 +15,7 @@
 # limitations under the License.
 
 require 'active_support/concern'
+require_relative 'searcher/boolean'
 
 module SnFoil
   #
@@ -130,7 +131,7 @@ module SnFoil
     def transform_params_booleans(params)
       params.map do |key, value|
         value = if booleans.include?(key.to_sym)
-                  ::Boolean.new.cast(value)
+                  SnFoil::Searcher::Boolean.new.cast(value)
                 else
                   value
                 end
