@@ -25,7 +25,7 @@
 
 require 'set'
 
-module SnFoil 
+module SnFoil
   module Searcher
     # A class that behaves like a boolean type, including rules for coercion of user input.
     #
