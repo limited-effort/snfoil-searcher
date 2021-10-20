@@ -30,7 +30,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '>= 5.2.6'
 
+  spec.add_development_dependency 'bundle-audit', '~> 0.1.0'
   spec.add_development_dependency 'dry-struct', '~> 1.0'
+  spec.add_development_dependency 'fasterer', '~> 0.9.0'
   spec.add_development_dependency 'pry-byebug', '~> 3.9'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.10'
