@@ -5,8 +5,8 @@ require_relative 'lib/snfoil/searcher/version'
 Gem::Specification.new do |spec|
   spec.name          = 'snfoil-searcher'
   spec.version       = SnFoil::Searcher::VERSION
-  spec.authors       = ['Matthew Howes']
-  spec.email         = ['howeszy@gmail.com']
+  spec.authors       = ['Matthew Howes', 'Cliff Campbell']
+  spec.email         = ['howeszy@gmail.com', 'cliffcampbell@hey.com']
 
   spec.summary       = 'A Simple Searcher Framework'
   spec.description   = 'Complex searching functionality as small easily testable sections.'
