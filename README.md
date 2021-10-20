@@ -16,7 +16,7 @@ gem 'snfoil-searcher'
 
 ### Quickstart
 
-Here is a quick example of how you would use the a SnFoil Searcher with active record.
+Here is a quick example of how you would use a SnFoil Searcher with Active Record.
 
 ```ruby 
 # lib/searchers/people_searcher
@@ -53,7 +53,7 @@ end
 ```
 
 #### Scoping
-You can provide an inital scope to the searcher by passing it to `new`.  If you don't pass in an initial scope, the searcher will try to use the model.
+You can provide an initial scope to the searcher by passing it to `new`.  If you don't pass in an initial scope, the searcher will try to use the model.
 
 ```ruby
 PeopleSearcher.new(People.where(team_id: 2))
@@ -61,7 +61,7 @@ PeopleSearcher.new(People.where(team_id: 2))
 
 #### Model
 
-Model is a optional paramater you can set on the searcher class.  If model is defined - and there is no default scope provided when initilizing the searcher - it will default to using `model.all`
+Model is an optional parameter you can set on the searcher class.  If a model is defined - and there is no default scope provided when initializing the searcher - it will default to using `model.all`
 
 ```ruby 
 class PeopleSearcher
@@ -73,7 +73,7 @@ end
 
 #### Filter
 
-A filter is a step in the search process that takes the current scope and parameters and returns an altered scope.  We recommend keeping each filter as simple as possible - it should only have one responibility.  This way you can easily see every step the searcher takes to get to its outcome as well as clearly defining behaviors that should be tested.
+A filter is a step in the search process that takes the current scope and parameters and returns an altered scope.  We recommend keeping each filter as simple as possible - it should only have one responsibility.  This way you can easily see every step the searcher takes to get to its outcome as well as defining behaviors that should be tested.
 
 You can create as many filters as you would like, but it is important to remember that a filter should **always** return a scope.
 
@@ -109,7 +109,7 @@ end
 ```
 
 #### Setup
-Setup is just a filter that runs first - before any other filters.  It does not allow for conditionals.  We recommend using this block to setup any requirements, tenant scoping, or stuff that really just need to happen first. 
+Setup is just a filter that runs first - before any other filters.  It does not allow for conditionals.  We recommend using this block to setup any requirements, tenant scoping, or stuff that just needs to happen first. 
 
 ```ruby 
 class PeopleSearcher
@@ -127,7 +127,7 @@ end
 
 #### Casting Booleans
 
-To help with cating boolean params - especially those coming from http params - we've added explicit boolean casting for params.  There are parsed and cast in place before any filter.  Just pass in an array of the params you would like to have cast.
+To help with casting boolean params - especially those coming from http params - we've added explicit boolean casting for params.  There are parsed and cast in place before any filter.  Just pass in an array of the params you would like to have cast.
 
 ```ruby
 
@@ -195,4 +195,4 @@ The gem is available as open source under the terms of the [Apache 2 License](ht
 
 ## Code of Conduct
 
-Everyone interacting in the Snfoil::Policy project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/limited-effort/snfoil-searcher/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Snfoil::Policy project's codebases, issue trackers, chat rooms, and mailing lists is expected to follow the [code of conduct](https://github.com/limited-effort/snfoil-searcher/blob/main/CODE_OF_CONDUCT.md).
