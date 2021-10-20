@@ -15,6 +15,7 @@
 # limitations under the License.
 
 require 'active_support/concern'
+require_relative 'searcher/boolean'
 
 module SnFoil
   #
@@ -130,19 +131,12 @@ module SnFoil
     def transform_params_booleans(params)
       params.map do |key, value|
         value = if booleans.include?(key.to_sym)
-                  value_to_boolean(value)
+                  SnFoil::Searcher::Boolean.new.cast(value)
                 else
                   value
                 end
         [key, value]
       end.to_h
-    end
-
-    def value_to_boolean(value)
-      value = false if value == '' || value.nil?
-      falses = [false, 0, '0', :'0', 'f', :f, 'F', :F, 'false', :false, 'FALSE', :FALSE, 'off', :off, 'OFF', :OFF].to_set.freeze # rubocop:disable Lint/BooleanSymbol
-
-      !falses.include?(value)
     end
   end
 end
