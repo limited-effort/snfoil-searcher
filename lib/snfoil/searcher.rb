@@ -30,40 +30,43 @@ module SnFoil
 
     extend ActiveSupport::Concern
 
-    class_methods do
-      attr_reader :i_model, :i_setup, :i_filters, :i_search_step, :i_booleans
+    class_methods do 
+      attr_reader :snfoil_model, :snfoil_setup, :snfoil_filters, :snfoil_booleans
 
       def model(klass = nil)
-        raise SnFoil::Searcher::Error, "model already defined for #{self.class.name}" if @i_model
+        raise SnFoil::Searcher::Error, "model already defined for #{self.class.name}" if @snfoil_model
 
-        @i_model = klass
+        @snfoil_model = klass
       end
 
       def setup(setup_method = nil, &setup_block)
-        raise SnFoil::Searcher::Error, "setup already defined for #{self.class.name}" if @i_setup
+        raise SnFoil::Searcher::Error, "setup already defined for #{self.class.name}" if @snfoil_setup
 
-        @i_setup = setup_method || setup_block
+        @snfoil_setup = setup_method || setup_block
       end
 
       def filter(method = nil, **options, &block)
         raise SnFoil::Searcher::ArgumentError, 'filter requires either a method name or a block' if method.nil? && block.nil?
 
-        (@i_filters ||= []) << {
-          method: method,
-          block: block,
-          if: options[:if],
-          unless: options[:unless]
-        }
+        (@snfoil_filters ||= []) << { method: method, block: block, if: options[:if], unless: options[:unless] }
       end
 
       def booleans(*fields)
-        @i_booleans ||= []
-        @i_booleans |= fields.map(&:to_sym)
+        @snfoil_booleans ||= []
+        @snfoil_booleans |= fields.map(&:to_sym)
+      end
+
+      def inherited(subclass)
+        super
+
+        instance_variables.grep(/@snfoil_.+/).each do |i|
+          subclass.instance_variable_set(i, instance_variable_get(i).dup)
+        end
       end
     end
 
     def model
-      self.class.i_model
+      self.class.snfoil_model
     end
 
     attr_reader :scope
@@ -84,15 +87,15 @@ module SnFoil
     def filter; end
 
     def setup
-      self.class.i_setup
+      self.class.snfoil_setup
     end
 
     def filters
-      self.class.i_filters || []
+      self.class.snfoil_filters || []
     end
 
     def booleans
-      self.class.i_booleans || []
+      self.class.snfoil_booleans || []
     end
 
     private

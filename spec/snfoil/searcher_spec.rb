@@ -337,6 +337,12 @@ RSpec.describe SnFoil::Searcher do
       end
     end
   end
+
+  describe 'inheritance' do
+    it 'assigns instance variables to subclass' do
+      expect(InheritedTestSearcherClass.instance_variables).to include(:@snfoil_filters)
+    end
+  end
 end
 
 module Types
@@ -356,7 +362,11 @@ end
 
 class TestSearcherClass
   include SnFoil::Searcher
+
+  filter { |scope, _params| scope }
 end
+
+class InheritedTestSearcherClass < TestSearcherClass; end
 
 class FakeScope
   attr_reader :model, :scope
