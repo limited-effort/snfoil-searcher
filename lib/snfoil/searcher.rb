@@ -30,7 +30,7 @@ module SnFoil
 
     extend ActiveSupport::Concern
 
-    class_methods do 
+    class_methods do
       attr_reader :snfoil_model, :snfoil_setup, :snfoil_filters, :snfoil_booleans
 
       def model(klass = nil)
