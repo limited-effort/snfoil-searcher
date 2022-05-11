@@ -315,7 +315,7 @@ RSpec.describe SnFoil::Searcher do
         it 'does not convert the value to true(Boolean)' do
           query
           expect(canary.song[0][:data][:parameter]).to be 'true'
-          expect(canary.song[0][:data][:parameter]).not_to eq true
+          expect(canary.song[0][:data][:parameter]).not_to be true
         end
       end
 
@@ -332,7 +332,7 @@ RSpec.describe SnFoil::Searcher do
         it 'does not convert the value to false(Boolean)' do
           query
           expect(canary.song[0][:data][:parameter]).to be 'false'
-          expect(canary.song[0][:data][:parameter]).not_to eq false
+          expect(canary.song[0][:data][:parameter]).not_to be false
         end
       end
     end
