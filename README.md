@@ -78,7 +78,7 @@ A filter is a step in the search process that takes the current scope and parame
 You can create as many filters as you would like, but it is important to remember that a filter should **always** return a scope.
 
 ```ruby 
-class PeopleSearch
+class PeopleSearcher
   ...
 
   # query by first_name
