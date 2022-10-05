@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'snfoil/searcher'
-require 'pry-byebug'
 require_relative 'canary'
 
 ENV['ISTEST'] = 'true'
