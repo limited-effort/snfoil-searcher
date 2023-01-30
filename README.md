@@ -56,7 +56,7 @@ end
 You can provide an initial scope to the searcher by passing it to `new`.  If you don't pass in an initial scope, the searcher will try to use the model.
 
 ```ruby
-PeopleSearcher.new(People.where(team_id: 2))
+PeopleSearcher.new(scope: People.where(team_id: 2))
 ```
 
 #### Model
@@ -174,7 +174,7 @@ fruits = [
   { name: 'Grape', color: 'red', type: 'berry', available: true  }
 ]
 
-FruitSearcher.new(fruits).search( type:'pome')
+FruitSearcher.new(scope: fruits).search( type:'pome')
   #=> [{ name: 'Apple', color: 'red', type: 'pome', available: true }, { name: 'Pear', color: 'green', type: 'pome', available: true }]
 ```
 
