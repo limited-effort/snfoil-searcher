@@ -25,20 +25,20 @@ jobs:
         with:
           context: .
           load: true
-          tags: limited-effort/snfoil-policy:${{ matrix.ruby-version }}-test
+          tags: limited-effort/snfoil-searcher:${{ matrix.ruby-version }}-test
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
             RUBY_VERSION=${{ matrix.ruby-version }}
 
       - name: Run Rubocop
-        run: docker run --rm limited-effort/snfoil-policy:${{ matrix.ruby-version }}-test bundle exec rubocop
+        run: docker run --rm limited-effort/snfoil-searcher:${{ matrix.ruby-version }}-test bundle exec rubocop
 
       - name: Run Fasterer
-        run: docker run --rm limited-effort/snfoil-policy:${{ matrix.ruby-version }}-test bundle exec fasterer
+        run: docker run --rm limited-effort/snfoil-searcher:${{ matrix.ruby-version }}-test bundle exec fasterer
 
       - name: Run Bundle Audit
-        run: docker run --rm limited-effort/snfoil-policy:${{ matrix.ruby-version }}-test bundle exec bundle audit check --update
+        run: docker run --rm limited-effort/snfoil-searcher:${{ matrix.ruby-version }}-test bundle exec bundle audit check --update
 
       - name: Run RSpec
-        run: docker run --rm limited-effort/snfoil-policy:${{ matrix.ruby-version }}-test bundle exec rspec
+        run: docker run --rm limited-effort/snfoil-searcher:${{ matrix.ruby-version }}-test bundle exec rspec
