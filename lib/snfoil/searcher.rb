@@ -133,11 +133,7 @@ module SnFoil
 
     def transform_params_booleans(params)
       params.to_h do |key, value|
-        value = if booleans.include?(key.to_sym)
-                  SnFoil::Searcher::Boolean.new.cast(value)
-                else
-                  value
-                end
+        value = SnFoil::Searcher::Boolean.new.cast(value) if booleans.include?(key.to_sym)
         [key, value]
       end
     end
