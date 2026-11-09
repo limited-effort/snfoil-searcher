@@ -23,8 +23,6 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'set'
-
 module SnFoil
   module Searcher
     # A class that behaves like a boolean type, including rules for coercion of user input.
