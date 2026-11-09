@@ -23,8 +23,6 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'set'
-
 module SnFoil
   module Searcher
     # A class that behaves like a boolean type, including rules for coercion of user input.
@@ -34,7 +32,7 @@ module SnFoil
     # - Empty strings are coerced to +nil+
     # - All other values will be coerced to +true+
     class Boolean
-      # rubocop:disable Lint/BooleanSymbol
+      # rubocop:disable-next Lint/BooleanSymbol
       FALSE_VALUES = [
         false, 0,
         '0', :'0',
@@ -46,9 +44,8 @@ module SnFoil
         'OFF', :OFF,
         '', nil
       ].to_set.freeze
-      # rubocop:enable Lint/BooleanSymbol
 
-      def cast(value)
+      def cast(value) # rubocop:disable Naming/PredicateMethod
         !FALSE_VALUES.include?(value)
       end
     end
