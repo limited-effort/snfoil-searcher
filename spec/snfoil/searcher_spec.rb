@@ -36,7 +36,7 @@ RSpec.describe SnFoil::Searcher do
 
   describe 'self#model' do
     it 'sets the internal model class' do
-      expect(instance.model.to_s).to match(/Person/)
+      expect(instance.model.to_s).to include('Person')
     end
 
     context 'when assinging model twice' do

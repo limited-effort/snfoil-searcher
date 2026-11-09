@@ -69,9 +69,8 @@ RSpec.describe SnFoil::Searcher::Boolean do
     end
 
     it ':true to true' do
-      # rubocop:disable Lint/BooleanSymbol
+      # rubocop:disable-next Lint/BooleanSymbol
       expect(boolean.cast(:true)).to be true
-      # rubocop:enable Lint/BooleanSymbol
     end
 
     it ':TRUE to true' do
@@ -143,9 +142,8 @@ RSpec.describe SnFoil::Searcher::Boolean do
     end
 
     it ':false to false' do
-      # rubocop:disable Lint/BooleanSymbol
+      # rubocop:disable-next Lint/BooleanSymbol
       expect(boolean.cast(:false)).to be false
-      # rubocop:enable Lint/BooleanSymbol
     end
 
     it ':FALSE to false' do

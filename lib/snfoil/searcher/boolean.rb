@@ -34,7 +34,7 @@ module SnFoil
     # - Empty strings are coerced to +nil+
     # - All other values will be coerced to +true+
     class Boolean
-      # rubocop:disable Lint/BooleanSymbol
+      # rubocop:disable-next Lint/BooleanSymbol
       FALSE_VALUES = [
         false, 0,
         '0', :'0',
@@ -46,9 +46,8 @@ module SnFoil
         'OFF', :OFF,
         '', nil
       ].to_set.freeze
-      # rubocop:enable Lint/BooleanSymbol
 
-      def cast(value)
+      def cast(value) # rubocop:disable Naming/PredicateMethod
         !FALSE_VALUES.include?(value)
       end
     end
